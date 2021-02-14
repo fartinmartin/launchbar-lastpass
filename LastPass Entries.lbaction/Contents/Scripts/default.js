@@ -39,7 +39,7 @@ function run(argument) {
 
                     return {
                         'title': `${title}(${userName || "?"})`,
-                        'action': 'getInfo',
+                        'action': 'copyPassword',
                         'actionArgument': id,
                         'actionReturnsItems': true
                     };
@@ -82,6 +82,18 @@ function getInfo(id) {
     }
     
     return result
+}
+
+function copyPassword(id) {
+    information = LaunchBar.execute("/usr/local/bin/lpass", "show", "--json", id);
+    informationObject = JSON.parse(information)[0];
+
+    LaunchBar.setClipboardString(informationObject.password);
+    LaunchBar.displayNotification({
+        title: "LastPass",
+        string: `${informationObject.name} password copied!`,
+    });
+    LaunchBar.hide();
 }
 
 function logIn() {
